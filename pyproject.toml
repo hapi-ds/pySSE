@@ -1,0 +1,94 @@
+[project]
+name = "sample-size-estimator"
+version = "1.0.0"
+description = "Statistical sample size calculator for medical device validation"
+requires-python = ">=3.11"
+dependencies = [
+    "streamlit>=1.30.0",
+    "pydantic>=2.5.0",
+    "pydantic-settings>=2.1.0",
+    "scipy>=1.11.0",
+    "numpy>=1.26.0",
+    "matplotlib>=3.8.0",
+    "reportlab>=4.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "hypothesis>=6.92.0",
+    "mypy>=1.8.0",
+    "ruff>=0.1.0",
+    "pytest-cov>=4.1.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/sample_size_estimator"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
+markers = [
+    "playwright: Playwright browser automation tests",
+    "e2e: End-to-end tests requiring running application",
+    "slow: Tests that take more than 5 seconds",
+]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
+
+# Re-enable strict checking for our own code
+[[tool.mypy.overrides]]
+module = "sample_size_estimator.*"
+ignore_missing_imports = false
+disallow_any_unimported = false
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP"]
+# Ignore E501 (line too long) as many long lines are in user-facing strings
+# where breaking them would harm readability
+ignore = ["E501"]
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["tests/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+]
+
+[dependency-groups]
+dev = [
+    "hypothesis>=6.151.9",
+    "mypy>=1.19.1",
+    "playwright>=1.58.0",
+    "psutil>=7.2.2",
+    "pytest>=9.0.2",
+    "pytest-cov>=7.0.0",
+    "pytest-playwright>=0.7.2",
+    "requests>=2.32.5",
+    "ruff>=0.15.1",
+    "scipy-stubs>=1.17.0.2",
+    "types-reportlab>=4.4.10.20260216",
+]

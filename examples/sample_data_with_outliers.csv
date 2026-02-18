@@ -1,0 +1,8 @@
+# Sample Data: Dataset with Outliers
+# This dataset contains obvious outliers for testing outlier detection
+# Use this with the Non-Normal Distribution tab
+# Expected outliers: 25.5 and 0.2 (marked with *)
+9.8,10.2,9.9,10.1,10.0,9.7,10.3,10.1,9.9,10.2
+10.0,9.8,10.1,10.0,9.9,10.2,10.1,9.8,10.0,10.1
+9.9,10.0,10.2,9.8,10.1,10.0,9.9,10.1,10.0,9.8
+25.5,10.1,9.9,10.0,10.2,9.8,10.1,10.0,0.2,10.1

@@ -1,0 +1,7 @@
+# Sample Data: Normal Distribution
+# This dataset represents normally distributed measurements
+# Use this with the Variables (Normal) tab
+# Mean ≈ 10.0, Std Dev ≈ 0.5, n = 30
+9.8,10.2,9.9,10.1,10.0,9.7,10.3,10.1,9.9,10.2
+10.0,9.8,10.1,10.0,9.9,10.2,10.1,9.8,10.0,10.1
+9.9,10.0,10.2,9.8,10.1,10.0,9.9,10.1,10.0,9.8
