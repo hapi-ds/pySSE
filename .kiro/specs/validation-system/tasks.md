@@ -24,35 +24,35 @@ Each task builds on previous tasks to ensure incremental progress with testable 
     - Implement `check_validation_status()` to determine overall validation state
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 4.1, 4.2, 4.3, 4.4, 5.1, 5.2, 5.3, 5.4, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7_
 
-  - [ ]* 2.2 Write property test for hash calculation idempotence
+  - [ ] 2.2 Write property test for hash calculation idempotence
     - **Property 5: Hash Calculation Idempotence**
     - **Validates: Requirements 3.4**
 
-  - [ ]* 2.3 Write property test for hash sensitivity to file changes
+  - [ ] 2.3 Write property test for hash sensitivity to file changes
     - **Property 6: Hash Sensitivity to File Changes**
     - **Validates: Requirements 3.5**
 
-  - [ ]* 2.4 Write property test for hash file filtering
+  - [ ] 2.4 Write property test for hash file filtering
     - **Property 7: Hash Excludes Non-Python Files**
     - **Validates: Requirements 3.3**
 
-  - [ ]* 2.5 Write property test for environment fingerprint completeness
+  - [ ] 2.5 Write property test for environment fingerprint completeness
     - **Property 8: Environment Fingerprint Completeness**
     - **Validates: Requirements 4.1, 4.2, 4.3**
 
-  - [ ]* 2.6 Write property test for environment comparison
+  - [ ] 2.6 Write property test for environment comparison
     - **Property 9: Environment Comparison Detects All Differences**
     - **Validates: Requirements 4.4**
 
-  - [ ]* 2.7 Write property test for validation expiry calculation
+  - [ ] 2.7 Write property test for validation expiry calculation
     - **Property 10: Validation Expiry Calculation Correctness**
     - **Validates: Requirements 5.2, 5.3, 5.4**
 
-  - [ ]* 2.8 Write property test for validation state determination
+  - [ ] 2.8 Write property test for validation state determination
     - **Property 3: Validation State Determination Correctness**
     - **Validates: Requirements 2.5, 2.6**
 
-  - [ ]* 2.9 Write unit tests for state manager edge cases
+  - [ ] 2.9 Write unit tests for state manager edge cases
     - Test missing calculation files
     - Test permission errors
     - Test missing dependencies
@@ -68,31 +68,31 @@ Each task builds on previous tasks to ensure incremental progress with testable 
     - Add history log size limiting logic
     - _Requirements: 15.1, 15.2, 15.3, 15.4, 15.5, 15.6, 20.1, 20.2, 20.3, 20.4, 20.5, 20.6, 20.7_
 
-  - [ ]* 3.2 Write property test for persistence round trip
+  - [ ] 3.2 Write property test for persistence round trip
     - **Property 11: Validation State Persistence Round Trip**
     - **Validates: Requirements 15.3**
 
-  - [ ]* 3.3 Write property test for persisted state completeness
+  - [ ] 3.3 Write property test for persisted state completeness
     - **Property 12: Persisted State Completeness**
     - **Validates: Requirements 15.2**
 
-  - [ ]* 3.4 Write property test for corrupted persistence detection
+  - [ ] 3.4 Write property test for corrupted persistence detection
     - **Property 13: Corrupted Persistence Detection**
     - **Validates: Requirements 15.5**
 
-  - [ ]* 3.5 Write property test for history event completeness
+  - [ ] 3.5 Write property test for history event completeness
     - **Property 14: History Event Completeness**
     - **Validates: Requirements 20.2, 20.3, 20.4, 20.5**
 
-  - [ ]* 3.6 Write property test for history retrieval ordering
+  - [ ] 3.6 Write property test for history retrieval ordering
     - **Property 15: History Retrieval Ordering**
     - **Validates: Requirements 20.6**
 
-  - [ ]* 3.7 Write property test for history log size limiting
+  - [ ] 3.7 Write property test for history log size limiting
     - **Property 16: History Log Size Limiting**
     - **Validates: Requirements 20.7**
 
-  - [ ]* 3.8 Write unit tests for persistence edge cases
+  - [ ] 3.8 Write unit tests for persistence edge cases
     - Test missing persistence directory
     - Test file write failures
     - Test corrupted JSON
@@ -112,7 +112,7 @@ Each task builds on previous tasks to ensure incremental progress with testable 
     - Mark all tests with `@pytest.mark.iq` and appropriate `@pytest.mark.urs()` markers
     - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7_
 
-  - [ ]* 5.2 Write unit tests for IQ test execution
+  - [ ] 5.2 Write unit tests for IQ test execution
     - Test IQ result aggregation
     - Test IQ failure handling
     - _Requirements: 7.6, 7.7_
@@ -126,7 +126,7 @@ Each task builds on previous tasks to ensure incremental progress with testable 
     - Map each test to its corresponding URS requirement from sample-size-estimator spec
     - _Requirements: 8.1, 8.2, 14.1, 14.2_
 
-  - [ ]* 6.2 Write unit tests for OQ test execution
+  - [ ] 6.2 Write unit tests for OQ test execution
     - Test OQ result aggregation
     - Test OQ failure handling
     - Test URS marker extraction
@@ -141,7 +141,49 @@ Each task builds on previous tasks to ensure incremental progress with testable 
     - Map each test to its corresponding URS requirement
     - _Requirements: 9.1, 9.2, 14.1, 14.2_
 
-  - [ ]* 7.2 Write unit tests for PQ test execution
+  - [ ] 7.2 Implement PDF validation tests
+    - [ ] 7.2.1 Add pdfplumber dependency for PDF text extraction
+      - Run `uv add pdfplumber`
+      - _Requirements: 29.2_
+
+    - [ ] 7.2.2 Create PDF extraction utility functions
+      - Create `tests/utils/pdf_validator.py` with `extract_pdf_text()` function
+      - Create parsing functions for each module: `parse_attribute_results()`, `parse_variables_results()`, etc.
+      - _Requirements: 29.2, 29.3_
+
+    - [ ] 7.2.3 Write PDF validation tests for Attribute module
+      - Create `tests/test_pdf_validation_attribute.py`
+      - Test that PDF report shows same sample size as calculation
+      - Test that PDF shows correct AQL/RQL values
+      - Mark with `@pytest.mark.pq` and `@pytest.mark.urs()` markers
+      - _Requirements: 29.1, 29.2, 29.3, 29.4, 29.5_
+
+    - [ ] 7.2.4 Write PDF validation tests for Variables module
+      - Create `tests/test_pdf_validation_variables.py`
+      - Test that PDF shows correct sample size and tolerance factors
+      - Test that PDF shows correct Ppk values
+      - Mark with `@pytest.mark.pq` and `@pytest.mark.urs()` markers
+      - _Requirements: 29.1, 29.2, 29.3, 29.4, 29.5_
+
+    - [ ] 7.2.5 Write PDF validation tests for Non-Normal module
+      - Create `tests/test_pdf_validation_non_normal.py`
+      - Test that PDF shows correct transformed sample sizes
+      - Test that PDF shows normality test results
+      - Mark with `@pytest.mark.pq` and `@pytest.mark.urs()` markers
+      - _Requirements: 29.1, 29.2, 29.3, 29.4, 29.5_
+
+    - [ ] 7.2.6 Write PDF validation tests for Reliability module
+      - Create `tests/test_pdf_validation_reliability.py`
+      - Test that PDF shows correct test duration
+      - Test that PDF shows correct acceleration factors
+      - Mark with `@pytest.mark.pq` and `@pytest.mark.urs()` markers
+      - _Requirements: 29.1, 29.2, 29.3, 29.4, 29.5_
+
+    - [ ] 7.2.7 Write property test for PDF report accuracy
+      - **Property 21: PDF Report Accuracy**
+      - **Validates: Requirements 29.1, 29.2, 29.3, 29.4**
+
+  - [ ] 7.3 Write unit tests for PQ test execution
     - Test PQ result aggregation
     - Test PQ failure handling
     - Test workflow description extraction
@@ -158,7 +200,7 @@ Each task builds on previous tasks to ensure incremental progress with testable 
     - Parse pytest output to extract test results and URS markers
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 8.8, 9.1, 9.2, 9.3, 9.4, 9.5, 9.6, 9.7_
 
-  - [ ]* 8.2 Write integration tests for validation orchestrator
+  - [ ] 8.2 Write integration tests for validation orchestrator
     - Test complete IQ/OQ/PQ workflow
     - Test workflow stops on failure
     - Test progress callback invocation
@@ -179,7 +221,7 @@ Each task builds on previous tasks to ensure incremental progress with testable 
     - Calculate and return certificate SHA-256 hash
     - _Requirements: 10.1, 10.2, 10.3, 10.4, 10.5, 10.6, 10.7, 10.8, 11.1, 11.2, 11.3, 11.4, 11.5, 11.6, 12.1, 12.2, 12.3, 12.4, 12.5, 12.6, 13.1, 13.2, 13.3, 13.4, 13.5, 13.6, 14.1, 14.2, 14.3, 14.4, 14.5, 26.1, 26.2_
 
-  - [ ]* 10.2 Write unit tests for certificate generation
+  - [ ] 10.2 Write unit tests for certificate generation
     - Test PDF generation with mock data
     - Test chapter formatting
     - Test traceability matrix generation
@@ -198,15 +240,15 @@ Each task builds on previous tasks to ensure incremental progress with testable 
     - Use Streamlit components: st.button, st.progress, st.metric, st.warning, st.error, st.success
     - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 18.1, 18.2, 18.3, 18.4, 18.5, 21.1, 21.2, 21.3, 21.4, 21.5, 21.6, 21.7, 25.2, 27.1, 27.2, 27.3, 27.4, 27.5, 27.6, 28.1, 28.2, 28.3, 28.4_
 
-  - [ ]* 11.2 Write property test for button color
+  - [ ] 11.2 Write property test for button color
     - **Property 1: Button Color Reflects Validation State**
     - **Validates: Requirements 1.2, 1.3**
 
-  - [ ]* 11.3 Write property test for button text
+  - [ ] 11.3 Write property test for button text
     - **Property 2: Button Text Reflects Validation State**
     - **Validates: Requirements 1.5**
 
-  - [ ]* 11.4 Write unit tests for UI components
+  - [ ] 11.4 Write unit tests for UI components
     - Test button rendering with various states
     - Test metrics dashboard display
     - Test progress indicator updates
@@ -231,7 +273,7 @@ Each task builds on previous tasks to ensure incremental progress with testable 
     - Include validation hash in reports
     - _Requirements: 25.3_
 
-  - [ ]* 12.3 Write integration tests for main application
+  - [ ] 12.3 Write integration tests for main application
     - Test validation button appears in UI
     - Test validation status check on startup
     - Test validation workflow execution from UI
@@ -252,7 +294,7 @@ Each task builds on previous tasks to ensure incremental progress with testable 
     - Return exit code 0 on success, non-zero on failure
     - _Requirements: 19.1, 19.2, 19.3, 19.4, 19.5, 19.6_
 
-  - [ ]* 14.2 Write unit tests for CLI script
+  - [ ] 14.2 Write unit tests for CLI script
     - Test argument parsing
     - Test exit codes
     - Test output directory creation
@@ -266,7 +308,7 @@ Each task builds on previous tasks to ensure incremental progress with testable 
     - Compare hashes and display VALID or TAMPERED status
     - _Requirements: 26.3, 26.4, 26.5_
 
-  - [ ]* 15.2 Write unit tests for certificate verification
+  - [ ] 15.2 Write unit tests for certificate verification
     - Test valid certificate verification
     - Test tampered certificate detection
     - _Requirements: 26.4, 26.5_
@@ -293,7 +335,7 @@ Each task builds on previous tasks to ensure incremental progress with testable 
     - Support --limit argument to control number of entries
     - _Requirements: 20.6_
 
-  - [ ]* 17.2 Write unit tests for history display
+  - [ ] 17.2 Write unit tests for history display
     - Test history retrieval
     - Test output formatting
     - Test limit parameter
@@ -310,7 +352,7 @@ Each task builds on previous tasks to ensure incremental progress with testable 
     - Configure log level from environment variable
     - _Requirements: 23.1, 23.2, 23.3, 23.4, 23.5, 23.6, 25.4_
 
-  - [ ]* 18.2 Write unit tests for logging
+  - [ ] 18.2 Write unit tests for logging
     - Test log messages are generated
     - Test log level configuration
     - _Requirements: 23.6_
@@ -323,7 +365,7 @@ Each task builds on previous tasks to ensure incremental progress with testable 
     - Use Streamlit file download or link to open PDF
     - _Requirements: 22.1, 22.2, 22.3, 22.4, 22.5_
 
-  - [ ]* 19.2 Write unit tests for certificate access UI
+  - [ ] 19.2 Write unit tests for certificate access UI
     - Test button rendering
     - Test date display
     - Test missing certificate message
@@ -336,7 +378,7 @@ Each task builds on previous tasks to ensure incremental progress with testable 
     - Add acknowledgment mechanism for users to proceed
     - _Requirements: 25.1, 25.4, 25.5_
 
-  - [ ]* 20.2 Write integration tests for graceful degradation
+  - [ ] 20.2 Write integration tests for graceful degradation
     - Test calculations work when not validated
     - Test logging of non-validated calculations
     - Test user acknowledgment flow

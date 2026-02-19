@@ -938,6 +938,12 @@ A property is a characteristic or behavior that should hold true across all vali
 
 **Validates: Requirements 5.5**
 
+### Property 21: PDF Report Accuracy
+
+*For any* calculation performed through the UI, the generated PDF report should contain the same calculation results within acceptable numerical tolerance.
+
+**Validates: Requirements 29.1, 29.2, 29.3, 29.4**
+
 ## Error Handling
 
 ### Hash Calculation Errors
@@ -1176,3 +1182,125 @@ scripts/
 - File permissions: Ensure persistence files are readable only by application user
 - Input validation: Validate all loaded JSON data against schemas
 - Path traversal: Validate all file paths to prevent directory traversal attacks
+
+
+## PDF Report Validation
+
+### Overview
+
+PDF report validation ensures that calculation results displayed in the UI match the results shown in generated PDF reports. This is critical for regulatory compliance, as printed reports are often used for documentation and audits.
+
+### Validation Approach
+
+PDF validation will be implemented as part of the PQ (Performance Qualification) phase:
+
+1. **Test Execution**: For each analysis module, execute a calculation workflow through the UI
+2. **PDF Generation**: Generate a PDF report using the application's report generation functionality
+3. **Content Extraction**: Extract text content from the generated PDF using PyPDF2 or pdfplumber
+4. **Result Parsing**: Parse calculation results from the extracted text
+5. **Comparison**: Compare parsed PDF results with expected calculation outputs
+6. **Assertion**: Assert that all key values match within acceptable tolerance
+
+### PDF Validation Tests
+
+Each analysis module will have corresponding PDF validation tests:
+
+```python
+@pytest.mark.pq
+@pytest.mark.urs("URS-REP-01")
+def test_attribute_pdf_matches_calculation():
+    """
+    PQ test: Verify attribute analysis PDF shows correct results.
+    
+    Validates: Requirement 29.1, 29.2, 29.3, 29.4
+    """
+    # Execute calculation
+    result = calculate_attribute_sample_size(
+        p0=0.05, p1=0.02, alpha=0.05, beta=0.10
+    )
+    
+    # Generate PDF report
+    pdf_path = generate_attribute_report(result)
+    
+    # Extract PDF content
+    pdf_text = extract_pdf_text(pdf_path)
+    
+    # Parse results from PDF
+    pdf_sample_size = parse_sample_size_from_pdf(pdf_text)
+    
+    # Verify match
+    assert pdf_sample_size == result.sample_size
+```
+
+### PDF Content Extraction
+
+The system will use a PDF extraction utility:
+
+```python
+def extract_pdf_text(pdf_path: Path) -> str:
+    """
+    Extract text content from PDF file.
+    
+    Args:
+        pdf_path: Path to PDF file
+    
+    Returns:
+        Extracted text content
+    """
+    import pdfplumber
+    
+    with pdfplumber.open(pdf_path) as pdf:
+        text = ""
+        for page in pdf.pages:
+            text += page.extract_text()
+    return text
+
+def parse_calculation_results(pdf_text: str, module: str) -> dict:
+    """
+    Parse calculation results from PDF text.
+    
+    Args:
+        pdf_text: Extracted PDF text
+        module: Analysis module name
+    
+    Returns:
+        Dictionary of parsed calculation results
+    """
+    # Use regex patterns to extract key values
+    # Pattern depends on module and report format
+    pass
+```
+
+### Test Coverage
+
+PDF validation tests will cover:
+
+1. **Attribute Analysis**: Sample size, confidence level, AQL/RQL values
+2. **Variables Analysis**: Sample size, tolerance factors, Ppk values
+3. **Non-Normal Analysis**: Transformed sample sizes, normality test results
+4. **Reliability Analysis**: Test duration, acceleration factors, confidence intervals
+
+### Error Handling
+
+- **PDF Generation Failure**: Test fails with clear error message
+- **PDF Extraction Failure**: Test fails indicating PDF may be corrupted
+- **Parsing Failure**: Test fails indicating PDF format may have changed
+- **Value Mismatch**: Test fails with detailed comparison showing expected vs actual
+
+### Integration with Validation Workflow
+
+PDF validation tests will be:
+- Tagged with `@pytest.mark.pq` marker
+- Tagged with appropriate URS markers
+- Executed as part of the PQ phase in the validation workflow
+- Included in the validation certificate PQ chapter
+- Counted in PQ test pass/fail statistics
+
+### Property for PDF Validation
+
+**Property 21: PDF Report Accuracy**
+
+*For any* calculation performed through the UI, the generated PDF report should contain the same calculation results within acceptable numerical tolerance.
+
+**Validates: Requirements 29.1, 29.2, 29.3, 29.4**
+
