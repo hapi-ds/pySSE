@@ -225,29 +225,29 @@ def main() -> None:
                         progress_callback=progress_callback
                     )
 
-                    if result.success:
-                        # Create validation state object
-                        from datetime import timedelta
-                        from .validation import ValidationState
-                        
-                        expiry_date = result.validation_date + timedelta(
-                            days=validation_config.validation_expiry_days
-                        )
-                        
-                        validation_state = ValidationState(
-                            validation_date=result.validation_date,
-                            validation_hash=result.validation_hash,
-                            environment_fingerprint=result.environment_fingerprint,
-                            iq_status="PASS" if result.iq_result.passed else "FAIL",
-                            oq_status="PASS" if result.oq_result.passed else "FAIL",
-                            pq_status="PASS" if result.pq_result.passed else "FAIL",
-                            expiry_date=expiry_date,
-                            certificate_hash=result.certificate_hash
-                        )
-                        
-                        # Save validation state
-                        persistence.save_validation_state(validation_state)
+                    # Create validation state object (for both success and failure)
+                    from datetime import timedelta
+                    from .validation import ValidationState
+                    
+                    expiry_date = result.validation_date + timedelta(
+                        days=validation_config.validation_expiry_days
+                    )
+                    
+                    validation_state = ValidationState(
+                        validation_date=result.validation_date,
+                        validation_hash=result.validation_hash,
+                        environment_fingerprint=result.environment_fingerprint,
+                        iq_status="PASS" if result.iq_result.passed else "FAIL",
+                        oq_status="PASS" if result.oq_result.passed else "FAIL",
+                        pq_status="PASS" if result.pq_result.passed else "FAIL",
+                        expiry_date=expiry_date,
+                        certificate_hash=result.certificate_hash
+                    )
+                    
+                    # Save validation state (both success and failure)
+                    persistence.save_validation_state(validation_state)
 
+                    if result.success:
                         validation_ui.render_validation_result(
                             True,
                             "✅ Validation completed successfully!"
