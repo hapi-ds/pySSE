@@ -16,6 +16,7 @@ import pytest
 from playwright.sync_api import Page, expect
 
 
+@pytest.mark.pq
 @pytest.mark.urs("REQ-25")
 @pytest.mark.urs("URS-VAL-03")
 @pytest.mark.playwright
@@ -39,6 +40,7 @@ def test_variables_tab_renders(page: Page):
     expect(page.get_by_label("Reliability (%)")).to_be_visible()
 
 
+@pytest.mark.pq
 @pytest.mark.urs("REQ-25")
 @pytest.mark.urs("URS-VAL-03")
 @pytest.mark.playwright
@@ -93,6 +95,7 @@ def test_variables_basic_calculation(page: Page):
     # Without spec limits, Ppk won't be calculated, so we just verify basic results
 
 
+@pytest.mark.pq
 @pytest.mark.urs("REQ-25")
 @pytest.mark.urs("URS-VAL-03")
 @pytest.mark.playwright
@@ -152,6 +155,7 @@ def test_variables_with_spec_limits(page: Page):
     expect(page.locator("text=/PASS|FAIL/")).to_be_visible()
 
 
+@pytest.mark.pq
 @pytest.mark.urs("REQ-25")
 @pytest.mark.urs("URS-VAL-03")
 @pytest.mark.playwright
@@ -201,6 +205,7 @@ def test_variables_invalid_spec_limits(page: Page):
     expect(page.locator("text=/error|Error|ERROR|invalid|Invalid/i")).to_be_visible(timeout=10000)
 
 
+@pytest.mark.pq
 @pytest.mark.urs("REQ-25")
 @pytest.mark.urs("URS-VAL-03")
 @pytest.mark.playwright

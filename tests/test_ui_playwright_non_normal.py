@@ -16,6 +16,7 @@ import pytest
 from playwright.sync_api import Page, expect
 
 
+@pytest.mark.pq
 @pytest.mark.urs("REQ-25")
 @pytest.mark.urs("URS-VAL-03")
 @pytest.mark.playwright
@@ -37,6 +38,7 @@ def test_non_normal_tab_renders(page: Page):
     expect(page.get_by_label("Enter your data")).to_be_visible()
 
 
+@pytest.mark.pq
 @pytest.mark.urs("REQ-25")
 @pytest.mark.urs("URS-VAL-03")
 @pytest.mark.playwright
@@ -71,6 +73,7 @@ def test_non_normal_outlier_detection(page: Page):
     expect(page.locator("text=/outlier|Outlier/i")).to_be_visible()
 
 
+@pytest.mark.pq
 @pytest.mark.urs("REQ-25")
 @pytest.mark.urs("URS-VAL-03")
 @pytest.mark.playwright
@@ -110,6 +113,7 @@ def test_non_normal_normality_tests(page: Page):
     expect(page.get_by_text("Anderson-Darling Test")).to_be_visible()
 
 
+@pytest.mark.pq
 @pytest.mark.urs("REQ-25")
 @pytest.mark.urs("URS-VAL-03")
 @pytest.mark.playwright
@@ -158,6 +162,7 @@ def test_non_normal_transformation(page: Page):
 # ============================================================================
 
 # Feature: playwright-ui-testing, Property 7: Data Input Interaction
+@pytest.mark.pq
 @pytest.mark.property
 @pytest.mark.playwright
 @pytest.mark.urs("REQ-25")
@@ -197,6 +202,7 @@ def test_property_data_input_interaction(page: Page):
 
 
 # Feature: playwright-ui-testing, Property 8: Dropdown Selection
+@pytest.mark.pq
 @pytest.mark.property
 @pytest.mark.playwright
 @pytest.mark.urs("REQ-25")

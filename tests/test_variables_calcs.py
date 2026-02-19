@@ -17,6 +17,8 @@ from sample_size_estimator.calculations.variables_calcs import (
 )
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-VAR-01")
 class TestOneSidedToleranceFactor:
     """Tests for one-sided tolerance factor calculation."""
 
@@ -75,6 +77,8 @@ class TestOneSidedToleranceFactor:
         assert np.isfinite(k1)
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-VAR-01")
 class TestTwoSidedToleranceFactor:
     """Tests for two-sided tolerance factor calculation."""
 
@@ -159,6 +163,8 @@ class TestTwoSidedToleranceFactor:
         assert abs(k2 - expected_k2) < 1e-10
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-VAR-01")
 class TestToleranceFactorComparison:
     """Tests comparing one-sided and two-sided tolerance factors."""
 
@@ -182,6 +188,8 @@ class TestToleranceFactorComparison:
         assert all(k2 > k1 for k1, k2 in zip(k1_values, k2_values))
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-VAR-01")
 class TestOneSidedToleranceFactorProperty:
     """Property-based tests for one-sided tolerance factor calculation.
     
@@ -236,6 +244,8 @@ class TestOneSidedToleranceFactorProperty:
         assert np.isfinite(k1), f"Tolerance factor must be finite, got {k1}"
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-VAR-01")
 class TestTwoSidedToleranceFactorProperty:
     """Property-based tests for two-sided tolerance factor calculation.
     
@@ -298,6 +308,8 @@ class TestTwoSidedToleranceFactorProperty:
 
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-VAR-02")
 class TestToleranceLimits:
     """Tests for tolerance limit calculation."""
 
@@ -384,6 +396,8 @@ class TestToleranceLimits:
 
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-VAR-02")
 class TestToleranceLimitsProperty:
     """Property-based tests for tolerance limit calculation.
     
@@ -446,6 +460,8 @@ class TestToleranceLimitsProperty:
 
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-VAR-03")
 class TestPpkCalculation:
     """Tests for Ppk (process performance index) calculation."""
 
@@ -620,6 +636,8 @@ class TestPpkCalculation:
         assert ppk == 0.0
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-VAR-03")
 class TestPpkCalculationProperty:
     """Property-based tests for Ppk calculation.
     
@@ -719,6 +737,8 @@ class TestPpkCalculationProperty:
 
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-VAR-04")
 class TestCompareToSpecLimits:
     """Tests for specification limit comparison."""
 
@@ -945,6 +965,8 @@ class TestCompareToSpecLimits:
 
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-VAR-04")
 class TestSpecificationComparisonProperty:
     """Property-based tests for specification limit comparison logic.
     
@@ -1132,6 +1154,8 @@ class TestSpecificationComparisonProperty:
 
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-VAR-05")
 class TestCalculateVariables:
     """Tests for the main calculate_variables() entry point.
     

@@ -459,7 +459,7 @@ class TestReportGenerationIntegration:
         from sample_size_estimator.models import AttributeInput, CalculationReport
         from sample_size_estimator.calculations.attribute_calcs import calculate_attribute
         from sample_size_estimator.reports import generate_calculation_report
-        from sample_size_estimator.validation import calculate_file_hash
+        from sample_size_estimator.validation_legacy import calculate_file_hash
         
         # Perform calculation
         input_data = AttributeInput(
@@ -554,7 +554,7 @@ class TestValidationStateIntegration:
         
         Validates: Requirements 21.1, 21.3, 21.4, 21.5
         """
-        from sample_size_estimator.validation import (
+        from sample_size_estimator.validation_legacy import (
             calculate_file_hash,
             verify_validation_state,
             get_engine_validation_info

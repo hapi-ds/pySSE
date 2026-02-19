@@ -1,0 +1,21 @@
+{
+  "validation_date": "2026-02-19T20:35:38.796656",
+  "validation_hash": "33ae18dcae48462956313d0e55f36f5de0b5e38f70fae68c8edcad93e726c22e",
+  "environment_fingerprint": {
+    "python_version": "3.13.5",
+    "dependencies": {
+      "scipy": "1.17.0",
+      "numpy": "2.4.2",
+      "streamlit": "1.54.0",
+      "pydantic": "2.12.5",
+      "reportlab": "4.4.10",
+      "pytest": "9.0.2",
+      "playwright": "1.58.0"
+    }
+  },
+  "iq_status": "PASS",
+  "oq_status": "PASS",
+  "pq_status": "PASS",
+  "expiry_date": "2027-02-19T20:35:38.796656",
+  "certificate_hash": "eb106f59408559965201223530498089c0d9d2f49ba281204c520d23245b1453"
+}

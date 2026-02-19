@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 from hypothesis import given, strategies as st
 
-from src.sample_size_estimator.validation import (
+from src.sample_size_estimator.validation_legacy import (
     calculate_file_hash,
     verify_validation_state,
     get_engine_validation_info

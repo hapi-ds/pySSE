@@ -21,6 +21,8 @@ from src.sample_size_estimator.calculations.reliability_calcs import (
 from src.sample_size_estimator.models import ReliabilityInput, ReliabilityResult
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-REL-01")
 class TestZeroFailureDuration:
     """Tests for zero-failure duration calculation."""
 
@@ -104,6 +106,8 @@ class TestZeroFailureDuration:
 
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-REL-02")
 class TestTemperatureConversion:
     """Tests for temperature conversion helper."""
 
@@ -140,6 +144,8 @@ class TestTemperatureConversion:
 
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-REL-02")
 class TestAccelerationFactor:
     """Tests for Arrhenius acceleration factor calculation."""
 
@@ -303,6 +309,8 @@ class TestAccelerationFactor:
 
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-REL-03")
 class TestCalculateReliability:
     """Tests for main entry point calculate_reliability()."""
 

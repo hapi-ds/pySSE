@@ -15,6 +15,7 @@ import pytest
 from playwright.sync_api import Page, expect
 
 
+@pytest.mark.pq
 @pytest.mark.urs("REQ-25")
 @pytest.mark.urs("URS-VAL-03")
 @pytest.mark.playwright
@@ -38,6 +39,7 @@ def test_attribute_tab_renders(page: Page):
     expect(page.get_by_label("Reliability (%)")).to_be_visible()
 
 
+@pytest.mark.pq
 @pytest.mark.urs("REQ-25")
 @pytest.mark.urs("URS-VAL-03")
 @pytest.mark.playwright
@@ -89,6 +91,7 @@ def test_attribute_zero_failure_calculation(page: Page):
     expect(page.get_by_text("Success Run")).to_be_visible()
 
 
+@pytest.mark.pq
 @pytest.mark.urs("REQ-25")
 @pytest.mark.urs("URS-VAL-03")
 @pytest.mark.playwright
@@ -145,6 +148,7 @@ def test_attribute_sensitivity_analysis(page: Page):
     expect(page.get_by_text("Three failures allowed requires")).to_be_visible()
 
 
+@pytest.mark.pq
 @pytest.mark.urs("REQ-25")
 @pytest.mark.urs("URS-VAL-03")
 @pytest.mark.playwright
@@ -202,6 +206,7 @@ def test_attribute_with_failures(page: Page):
     expect(page.get_by_text("Sensitivity Analysis Results")).not_to_be_visible()
 
 
+@pytest.mark.pq
 @pytest.mark.urs("REQ-25")
 @pytest.mark.urs("URS-VAL-03")
 @pytest.mark.playwright
@@ -277,6 +282,7 @@ def test_attribute_invalid_confidence(page: Page):
 # ============================================================================
 
 # Feature: playwright-ui-testing, Property 3: Tab Navigation
+@pytest.mark.pq
 @pytest.mark.property
 @pytest.mark.playwright
 @pytest.mark.urs("REQ-25")
@@ -306,6 +312,7 @@ def test_property_tab_navigation(page: Page):
 
 
 # Feature: playwright-ui-testing, Property 4: Numeric Input Interaction
+@pytest.mark.pq
 @pytest.mark.property
 @pytest.mark.playwright
 @pytest.mark.urs("REQ-25")
@@ -358,6 +365,7 @@ def test_property_numeric_input_interaction(page: Page):
 
 
 # Feature: playwright-ui-testing, Property 5: Calculate Button Triggers Computation
+@pytest.mark.pq
 @pytest.mark.property
 @pytest.mark.playwright
 @pytest.mark.urs("REQ-25")
@@ -412,6 +420,7 @@ def test_property_calculate_button_triggers_computation(page: Page):
 
 
 # Feature: playwright-ui-testing, Property 6: Results Display After Calculation
+@pytest.mark.pq
 @pytest.mark.property
 @pytest.mark.playwright
 @pytest.mark.urs("REQ-25")

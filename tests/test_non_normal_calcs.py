@@ -8,6 +8,7 @@ import matplotlib
 matplotlib.use('Agg')  # Use non-interactive backend for testing
 
 import numpy as np
+import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
@@ -16,6 +17,8 @@ from src.sample_size_estimator.calculations.non_normal_calcs import (
 )
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-NONNORM-01")
 class TestOutlierDetection:
     """Tests for outlier detection using IQR method."""
 
@@ -75,6 +78,8 @@ class TestOutlierDetection:
         assert 0 in outlier_indices  # Index of -100
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-NONNORM-01")
 class TestOutlierDetectionProperty:
     """Property-based tests for outlier detection.
     
@@ -176,6 +181,8 @@ class TestOutlierDetectionProperty:
 
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-NONNORM-02")
 class TestNormalityTesting:
     """Tests for normality testing functions."""
 
@@ -233,6 +240,8 @@ class TestNormalityTesting:
         assert result.is_normal == False
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-NONNORM-02")
 class TestNormalityTestingProperty:
     """Property-based tests for normality testing.
     
@@ -327,6 +336,8 @@ class TestNormalityTestingProperty:
             )
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-NONNORM-03")
 class TestQQPlot:
     """Tests for Q-Q plot generation."""
 
@@ -365,6 +376,8 @@ class TestQQPlot:
 
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-NONNORM-04")
 class TestTransformations:
     """Tests for data transformation functions."""
 
@@ -440,6 +453,8 @@ class TestTransformations:
             transform_sqrt(data)
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-NONNORM-05")
 class TestTransformationRoundTripProperty:
     """Property-based tests for transformation round-trip.
     
@@ -573,6 +588,8 @@ class TestTransformationRoundTripProperty:
 
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-NONNORM-06")
 class TestApplyTransformation:
     """Tests for apply_transformation function."""
 
@@ -616,6 +633,8 @@ class TestApplyTransformation:
         assert result.normality_after is not None
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-NONNORM-07")
 class TestPostTransformationNormalityProperty:
     """Property-based tests for post-transformation normality testing.
     
@@ -666,6 +685,8 @@ class TestPostTransformationNormalityProperty:
         assert len(result.normality_after.interpretation) > 0, "No interpretation provided"
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-NONNORM-08")
 class TestWilksLimits:
     """Tests for Wilks' non-parametric method."""
 
@@ -690,6 +711,8 @@ class TestWilksLimits:
         assert upper == 100.0
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-NONNORM-08")
 class TestWilksLimitsProperty:
     """Property-based tests for Wilks' method.
     

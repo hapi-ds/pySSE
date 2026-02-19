@@ -15,6 +15,7 @@ import pytest
 from playwright.sync_api import Page, expect
 
 
+@pytest.mark.pq
 @pytest.mark.urs("REQ-25")
 @pytest.mark.urs("URS-VAL-03")
 @pytest.mark.playwright
@@ -37,6 +38,7 @@ def test_reliability_tab_renders(page: Page):
     expect(page.get_by_label("Number of Failures")).to_be_visible()
 
 
+@pytest.mark.pq
 @pytest.mark.urs("REQ-25")
 @pytest.mark.urs("URS-VAL-03")
 @pytest.mark.playwright
@@ -88,6 +90,7 @@ def test_reliability_calculation(page: Page):
     expect(page.get_by_text("Acceleration Factor")).to_be_visible()
 
 
+@pytest.mark.pq
 @pytest.mark.urs("REQ-25")
 @pytest.mark.urs("URS-VAL-03")
 @pytest.mark.playwright
@@ -149,6 +152,7 @@ def test_reliability_invalid_reliability(page: Page):
 # ============================================================================
 
 # Feature: playwright-ui-testing, Property 9: Error Messages for Invalid Inputs
+@pytest.mark.pq
 @pytest.mark.property
 @pytest.mark.playwright
 @pytest.mark.urs("REQ-25")

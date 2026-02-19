@@ -6,6 +6,7 @@ with known statistical values and edge cases.
 
 import math
 
+import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
 from scipy import stats
@@ -15,6 +16,8 @@ from src.sample_size_estimator.calculations.attribute_calcs import (
 )
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-FUNC_A-02")
 class TestSuccessRunTheorem:
     """Tests for Success Run Theorem calculation (c=0)."""
 
@@ -65,6 +68,8 @@ class TestSuccessRunTheorem:
         assert n1 < n2 < n3
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-FUNC_A-02")
 class TestSuccessRunTheoremProperty:
     """Property-based tests for Success Run Theorem calculation.
     
@@ -110,6 +115,8 @@ class TestSuccessRunTheoremProperty:
 
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-FUNC_A-03")
 class TestBinomialSampleSize:
     """Tests for binomial sample size calculation (c>0)."""
 
@@ -195,6 +202,8 @@ class TestBinomialSampleSize:
         assert isinstance(result, int)
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-FUNC_A-03")
 class TestBinomialSampleSizeProperty:
     """Property-based tests for binomial sample size calculation.
     
@@ -304,6 +313,8 @@ class TestBinomialSampleSizeProperty:
 
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-FUNC_A-04")
 class TestSensitivityAnalysis:
     """Tests for sensitivity analysis calculation."""
 
@@ -359,6 +370,8 @@ class TestSensitivityAnalysis:
         assert result.results[3].method == "binomial"
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-FUNC_A-04")
 class TestSensitivityAnalysisProperty:
     """Property-based tests for sensitivity analysis.
     
@@ -432,6 +445,8 @@ class TestSensitivityAnalysisProperty:
             )
 
 
+@pytest.mark.oq
+@pytest.mark.urs("URS-FUNC_A-05")
 class TestCalculateAttribute:
     """Tests for main entry point calculate_attribute()."""
 

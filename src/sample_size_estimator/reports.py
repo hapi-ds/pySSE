@@ -149,6 +149,27 @@ def generate_calculation_report(
     ]))
     story.append(validation_table)
 
+    # Add disclaimer if not validated
+    if not report_data.validated_state:
+        story.append(Spacer(1, 0.2 * inch))
+        disclaimer_style = ParagraphStyle(
+            'Disclaimer',
+            parent=styles['Normal'],
+            fontSize=10,
+            textColor=colors.red,
+            borderColor=colors.red,
+            borderWidth=1,
+            borderPadding=10,
+            spaceAfter=10
+        )
+        story.append(Paragraph(
+            "<b>DISCLAIMER:</b> This calculation was performed using a non-validated "
+            "version of the Sample Size Estimator. Results should not be used for "
+            "regulatory submissions without proper validation. Please run the validation "
+            "workflow to ensure calculation accuracy and compliance.",
+            disclaimer_style
+        ))
+
     # Build PDF
     doc.build(story)
 
