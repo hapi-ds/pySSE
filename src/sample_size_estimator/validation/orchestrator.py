@@ -55,121 +55,122 @@ class ValidationOrchestrator:
         self.certificate_generator = ValidationCertificateGenerator()
 
     def execute_validation_workflow(
-        self,
-        progress_callback: Callable[[str, int], None] | None = None,
-        generate_certificate: bool = True
-    ) -> ValidationResult:
-        """Execute complete IQ/OQ/PQ validation workflow.
-        
-        This method:
-        1. Executes IQ tests first
-        2. If IQ passes, executes OQ tests
-        3. If OQ passes, executes PQ tests
-        4. Stops workflow if any phase fails
-        5. Calls progress_callback with phase name and progress percentage
-        6. Generates validation certificate if requested
-        7. Returns ValidationResult with all test results
-        
-        Args:
-            progress_callback: Optional callback for progress updates
-                              (phase_name, progress_percentage)
-            generate_certificate: Whether to generate certificate PDF (default: True)
-        
-        Returns:
-            ValidationResult with overall status and detailed results
-        
-        Validates: Requirements 6.1, 6.2, 6.3, 6.4, 6.5
-        """
-        if progress_callback:
-            progress_callback("Starting validation", 0)
-        
-        # Execute IQ tests
-        if progress_callback:
-            progress_callback("IQ", 10)
-        
-        iq_result = self.execute_iq_tests()
-        
-        if progress_callback:
-            progress_callback("IQ", 33)
-        
-        # Stop if IQ fails
-        if not iq_result.passed:
-            return self._create_failed_result(
-                iq_result=iq_result,
-                oq_result=None,
-                pq_result=None
-            )
-        
-        # Execute OQ tests
-        if progress_callback:
-            progress_callback("OQ", 40)
-        
-        oq_result = self.execute_oq_tests()
-        
-        if progress_callback:
-            progress_callback("OQ", 66)
-        
-        # Stop if OQ fails
-        if not oq_result.passed:
-            return self._create_failed_result(
+            self,
+            progress_callback: Callable[[str, float], None] | None = None,
+            generate_certificate: bool = True
+        ) -> ValidationResult:
+            """Execute complete IQ/OQ/PQ validation workflow.
+
+            This method:
+            1. Executes IQ tests first
+            2. If IQ passes, executes OQ tests
+            3. If OQ passes, executes PQ tests
+            4. Stops workflow if any phase fails
+            5. Calls progress_callback with phase name and progress percentage (0.0-1.0)
+            6. Generates validation certificate if requested
+            7. Returns ValidationResult with all test results
+
+            Args:
+                progress_callback: Optional callback for progress updates
+                                  (phase_name, progress_percentage as float 0.0-1.0)
+                generate_certificate: Whether to generate certificate PDF (default: True)
+
+            Returns:
+                ValidationResult with overall status and detailed results
+
+            Validates: Requirements 6.1, 6.2, 6.3, 6.4, 6.5
+            """
+            if progress_callback:
+                progress_callback("Starting validation", 0.0)
+
+            # Execute IQ tests
+            if progress_callback:
+                progress_callback("IQ", 0.10)
+
+            iq_result = self.execute_iq_tests()
+
+            if progress_callback:
+                progress_callback("IQ", 0.33)
+
+            # Stop if IQ fails
+            if not iq_result.passed:
+                return self._create_failed_result(
+                    iq_result=iq_result,
+                    oq_result=None,
+                    pq_result=None
+                )
+
+            # Execute OQ tests
+            if progress_callback:
+                progress_callback("OQ", 0.40)
+
+            oq_result = self.execute_oq_tests()
+
+            if progress_callback:
+                progress_callback("OQ", 0.66)
+
+            # Stop if OQ fails
+            if not oq_result.passed:
+                return self._create_failed_result(
+                    iq_result=iq_result,
+                    oq_result=oq_result,
+                    pq_result=None
+                )
+
+            # Execute PQ tests
+            if progress_callback:
+                progress_callback("PQ", 0.70)
+
+            pq_result = self.execute_pq_tests()
+
+            if progress_callback:
+                progress_callback("PQ", 0.90)
+
+            # Create final result
+            result = self._create_result(
+                success=pq_result.passed,
                 iq_result=iq_result,
                 oq_result=oq_result,
-                pq_result=None
+                pq_result=pq_result
             )
-        
-        # Execute PQ tests
-        if progress_callback:
-            progress_callback("PQ", 70)
-        
-        pq_result = self.execute_pq_tests()
-        
-        if progress_callback:
-            progress_callback("PQ", 90)
-        
-        # Create final result
-        result = self._create_result(
-            success=pq_result.passed,
-            iq_result=iq_result,
-            oq_result=oq_result,
-            pq_result=pq_result
-        )
-        
-        # Generate certificate if requested (regardless of pass/fail)
-        if generate_certificate:
+
+            # Generate certificate if requested (regardless of pass/fail)
+            if generate_certificate:
+                if progress_callback:
+                    progress_callback("Generating certificate", 0.95)
+
+                try:
+                    # Generate certificate with timestamp
+                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                    cert_filename = f"validation_certificate_{timestamp}.pdf"
+                    cert_path = self.certificate_output_dir / cert_filename
+
+                    # Generate certificate
+                    cert_hash = self.certificate_generator.generate_certificate(
+                        result,
+                        cert_path
+                    )
+
+                    # Update result with certificate info
+                    result.certificate_path = cert_path
+                    result.certificate_hash = cert_hash
+
+                    # Also save as "latest" for easy access
+                    latest_path = self.certificate_output_dir / "validation_certificate_latest.pdf"
+                    cert_hash_latest = self.certificate_generator.generate_certificate(
+                        result,
+                        latest_path
+                    )
+
+                except Exception as e:
+                    # Log error but don't fail validation
+                    print(f"Warning: Failed to generate certificate: {e}")
+
             if progress_callback:
-                progress_callback("Generating certificate", 95)
-            
-            try:
-                # Generate certificate with timestamp
-                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                cert_filename = f"validation_certificate_{timestamp}.pdf"
-                cert_path = self.certificate_output_dir / cert_filename
-                
-                # Generate certificate
-                cert_hash = self.certificate_generator.generate_certificate(
-                    result,
-                    cert_path
-                )
-                
-                # Update result with certificate info
-                result.certificate_path = cert_path
-                result.certificate_hash = cert_hash
-                
-                # Also save as "latest" for easy access
-                latest_path = self.certificate_output_dir / "validation_certificate_latest.pdf"
-                cert_hash_latest = self.certificate_generator.generate_certificate(
-                    result,
-                    latest_path
-                )
-                
-            except Exception as e:
-                # Log error but don't fail validation
-                print(f"Warning: Failed to generate certificate: {e}")
-        
-        if progress_callback:
-            progress_callback("Complete", 100)
-        
-        return result
+                progress_callback("Complete", 1.0)
+
+            return result
+
 
     def execute_iq_tests(self) -> IQResult:
         """Execute Installation Qualification tests.

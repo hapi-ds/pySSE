@@ -79,7 +79,7 @@ class TestValidationOrchestrator:
         orchestrator = ValidationOrchestrator()
         progress_calls = []
         
-        def progress_callback(phase: str, progress: int):
+        def progress_callback(phase: str, progress: float):
             progress_calls.append((phase, progress))
         
         result = orchestrator.execute_validation_workflow(
@@ -267,7 +267,7 @@ class TestProgressCallbackInvocation:
         orchestrator = ValidationOrchestrator()
         phases_seen = set()
         
-        def progress_callback(phase: str, progress: int):
+        def progress_callback(phase: str, progress: float):
             phases_seen.add(phase)
         
         orchestrator.execute_validation_workflow(
@@ -284,7 +284,7 @@ class TestProgressCallbackInvocation:
         orchestrator = ValidationOrchestrator()
         progress_values = []
         
-        def progress_callback(phase: str, progress: int):
+        def progress_callback(phase: str, progress: float):
             progress_values.append(progress)
         
         orchestrator.execute_validation_workflow(
