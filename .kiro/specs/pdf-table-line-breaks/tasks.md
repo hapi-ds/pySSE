@@ -1,0 +1,113 @@
+# Implementation Plan
+
+- [ ] 1. Write bug condition exploration test
+  - **Property 1: Fault Condition** - Text Wrapping in Long Cells
+  - **CRITICAL**: This test MUST FAIL on unfixed code - failure confirms the bug exists
+  - **DO NOT attempt to fix the test or the code when it fails**
+  - **NOTE**: This test encodes the expected behavior - it will validate the fix when it passes after implementation
+  - **GOAL**: Surface counterexamples that demonstrate text overflow in PDF table cells
+  - **Scoped PBT Approach**: Scope the property to concrete failing cases with long text (>100 chars) in various table types
+  - Test that table cells with long text (exceeding column width) cause overflow/overlapping on unfixed code
+  - Generate PDFs with intentionally long text in:
+    - Input parameter names (>100 characters)
+    - Test names (>80 characters)
+    - Failure reasons (>150 characters)
+    - Package names (>50 characters)
+  - Manually inspect generated PDFs to observe text overflow beyond cell boundaries
+  - Run test on UNFIXED code
+  - **EXPECTED OUTCOME**: Test FAILS (this is correct - it proves the bug exists)
+  - Document counterexamples found (e.g., "Text 'Maximum Allowable Failure Rate...' overflows 2-inch column and overlaps adjacent cell")
+  - Mark task complete when test is written, run, and failure is documented
+  - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5_
+
+- [ ] 2. Write preservation property tests (BEFORE implementing fix)
+  - **Property 2: Preservation** - Table Styling and Short Text
+  - **IMPORTANT**: Follow observation-first methodology
+  - Observe behavior on UNFIXED code for short text cells (text that fits within column width)
+  - Observe that "PASS", "FAIL", dates, short labels render correctly without wrapping
+  - Observe that table styling (grid lines, colors, padding, alignment) works correctly
+  - Observe that conditional coloring (green for PASS, red for FAIL) applies correctly
+  - Observe that font styling (bold headers, regular text) renders correctly
+  - Write property-based tests capturing observed behavior patterns:
+    - Short text (<20 chars) renders without wrapping
+    - Table styling preserved (colors, fonts, padding, alignment)
+    - Conditional coloring preserved (PASS=green, FAIL=red)
+    - Font formatting preserved (bold headers)
+  - Property-based testing generates many test cases for stronger guarantees
+  - Run tests on UNFIXED code
+  - **EXPECTED OUTCOME**: Tests PASS (this confirms baseline behavior to preserve)
+  - Mark task complete when tests are written, run, and passing on unfixed code
+  - _Requirements: 3.1, 3.2, 3.3, 3.5, 3.6_
+
+- [ ] 3. Fix for PDF table text overflow
+
+  - [ ] 3.1 Implement text wrapping in reports.py
+    - Import Paragraph from reportlab.platypus (already imported, verify)
+    - Create `_wrap_text()` helper function at module level
+      - Takes string and style as parameters
+      - Returns Paragraph object
+      - Handles None values gracefully (return empty string or Paragraph with empty string)
+    - Update `generate_calculation_report()` function:
+      - Wrap metadata table cells (line 60): date/time, module, version
+      - Wrap input parameters table cells (line 76): parameter names and values
+      - Wrap sensitivity analysis table cells (lines 103-108): allowable failures, sample size, method
+      - Wrap results table cells (lines 127-131): result names and values
+      - Wrap validation table cells (line 147): engine hash and validation status
+    - Update `generate_validation_certificate()` function:
+      - Wrap execution info table cells (lines 260-265): test date, tester, OS, Python version
+      - Wrap URS results table cells (lines 280-285): URS ID, test name, status
+      - Wrap summary table cells (lines 300-305): overall status and validated hash
+    - _Bug_Condition: isBugCondition(cell_content, column_width, font_size) where estimatedTextWidth(cell_content, font_size) > column_width AND cell_content is plain string_
+    - _Expected_Behavior: Text wrapped using Paragraph flowable with 'Normal' style, all text within cell boundaries, no overlapping_
+    - _Preservation: Table styling (colors, fonts, padding, alignment), conditional coloring, font formatting, PDF layout unchanged_
+    - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 3.1, 3.2, 3.3, 3.5, 3.6_
+
+  - [ ] 3.2 Implement text wrapping in certificate.py
+    - Import Paragraph from reportlab.platypus (verify import exists)
+    - Add `_wrap_text()` instance method to ValidationCertificateGenerator class
+      - Takes string and optional style parameter (defaults to self.styles['Normal'])
+      - Returns Paragraph object
+      - Handles None values gracefully
+    - Update title page table cells (lines 177-180): validation date, hash, expiry date
+    - Update system info table cells:
+      - OS data (lines 234-237): OS name, version, Python version
+      - Dependency data (lines 268-271): package names and versions
+    - Update IQ chapter table cells (lines 330-340): check name, description, status, details
+    - Update OQ chapter table cells (lines 400-410): test name, URS ID, status, failure reason
+    - Update PQ chapter table cells (lines 470-480): test name, URS ID, workflow description, status
+    - Update traceability matrix table cells (lines 580-590): URS ID, test name, phase, status
+    - _Bug_Condition: isBugCondition(cell_content, column_width, font_size) where estimatedTextWidth(cell_content, font_size) > column_width AND cell_content is plain string_
+    - _Expected_Behavior: Text wrapped using Paragraph flowable with 'Normal' style, all text within cell boundaries, no overlapping_
+    - _Preservation: Table styling (colors, fonts, padding, alignment), conditional coloring, font formatting, PDF layout unchanged_
+    - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 3.1, 3.2, 3.3, 3.5, 3.6_
+
+  - [ ] 3.3 Verify bug condition exploration test now passes
+    - **Property 1: Expected Behavior** - Text Wrapping in Long Cells
+    - **IMPORTANT**: Re-run the SAME test from task 1 - do NOT write a new test
+    - The test from task 1 encodes the expected behavior
+    - When this test passes, it confirms the expected behavior is satisfied
+    - Run bug condition exploration test from step 1
+    - Generate PDFs with long text in various table types
+    - Manually inspect PDFs to verify text wraps within cell boundaries
+    - Verify no text overlaps adjacent cells
+    - **EXPECTED OUTCOME**: Test PASSES (confirms bug is fixed)
+    - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5_
+
+  - [ ] 3.4 Verify preservation tests still pass
+    - **Property 2: Preservation** - Table Styling and Short Text
+    - **IMPORTANT**: Re-run the SAME tests from task 2 - do NOT write new tests
+    - Run preservation property tests from step 2
+    - Verify short text still renders correctly without unnecessary wrapping
+    - Verify table styling (colors, fonts, padding, alignment) unchanged
+    - Verify conditional coloring (PASS=green, FAIL=red) still works
+    - Verify font formatting (bold headers) still works
+    - **EXPECTED OUTCOME**: Tests PASS (confirms no regressions)
+    - Confirm all tests still pass after fix (no regressions)
+    - _Requirements: 3.1, 3.2, 3.3, 3.5, 3.6_
+
+- [ ] 4. Checkpoint - Ensure all tests pass
+  - Run complete test suite to verify all tests pass
+  - Manually inspect generated PDFs for visual quality
+  - Verify text wrapping looks professional and readable
+  - Verify no regressions in existing functionality
+  - Ask the user if questions arise or if manual PDF inspection is needed

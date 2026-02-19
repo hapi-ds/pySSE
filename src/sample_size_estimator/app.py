@@ -246,6 +246,9 @@ def main() -> None:
                     
                     # Save validation state (both success and failure)
                     persistence.save_validation_state(validation_state)
+                    
+                    # Force Streamlit to rerun to reload validation status
+                    st.rerun()
 
                     if result.success:
                         validation_ui.render_validation_result(

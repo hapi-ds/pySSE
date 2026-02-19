@@ -1,5 +1,5 @@
 {
-  "validation_date": "2026-02-19T20:35:38.796656",
+  "validation_date": "2026-02-19T22:13:32.175791",
   "validation_hash": "33ae18dcae48462956313d0e55f36f5de0b5e38f70fae68c8edcad93e726c22e",
   "environment_fingerprint": {
     "python_version": "3.13.5",
@@ -15,7 +15,7 @@
   },
   "iq_status": "PASS",
   "oq_status": "PASS",
-  "pq_status": "PASS",
-  "expiry_date": "2027-02-19T20:35:38.796656",
-  "certificate_hash": "eb106f59408559965201223530498089c0d9d2f49ba281204c520d23245b1453"
+  "pq_status": "FAIL",
+  "expiry_date": "2027-02-19T22:13:32.175791",
+  "certificate_hash": "1c061c431f1a7f5415801edb8497d8ff6bfa602ff1c222fa937040f2262bb1e2"
 }
