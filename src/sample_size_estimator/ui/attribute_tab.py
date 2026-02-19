@@ -124,7 +124,8 @@ def render_attribute_tab(logger: logging.Logger) -> None:
 
         result = st.session_state['attribute_result']
 
-        if isinstance(result, SensitivityResult):
+        # Check if result has 'results' attribute (SensitivityResult) or 'sample_size' (AttributeResult)
+        if isinstance(result, SensitivityResult) or (hasattr(result, 'results') and not hasattr(result, 'sample_size')):
             # Display sensitivity analysis table
             st.markdown("**Sensitivity Analysis Results**")
             st.markdown("Sample sizes for different allowable failure scenarios:")
@@ -183,7 +184,7 @@ def render_attribute_tab(logger: logging.Logger) -> None:
                 # Prepare report data
                 input_data = st.session_state['attribute_input']
 
-                if isinstance(result, SensitivityResult):
+                if isinstance(result, SensitivityResult) or (hasattr(result, 'results') and not hasattr(result, 'sample_size')):
                     results_dict = {
                         "sensitivity_analysis": [
                             {

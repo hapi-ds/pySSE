@@ -86,17 +86,49 @@ def generate_calculation_report(
 
     # Results section
     story.append(Paragraph("<b>Calculated Results</b>", styles['Heading2']))
-    results_data = [[k, str(v)] for k, v in report_data.results.items()]
-    results_table = Table(results_data, colWidths=[2 * inch, 4 * inch])
-    results_table.setStyle(TableStyle([
-        ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
-        ('FONTNAME', (1, 0), (1, -1), 'Helvetica'),
-        ('FONTSIZE', (0, 0), (-1, -1), 10),
-        ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
-        ('BACKGROUND', (0, 0), (0, -1), colors.lightblue),
-        ('PADDING', (0, 0), (-1, -1), 6),
-    ]))
-    story.append(results_table)
+
+    # Check if this is a sensitivity analysis result
+    if "sensitivity_analysis" in report_data.results:
+        story.append(Paragraph(
+            "Sensitivity Analysis: Sample sizes for different allowable failure scenarios",
+            styles['Normal']
+        ))
+        story.append(Spacer(1, 0.1 * inch))
+
+        # Create table with headers
+        sensitivity_data = [["Allowable Failures (c)", "Required Sample Size (n)", "Method"]]
+        for result in report_data.results["sensitivity_analysis"]:
+            sensitivity_data.append([
+                str(result["allowable_failures"]),
+                str(result["sample_size"]),
+                result["method"].replace("_", " ").title()
+            ])
+
+        sensitivity_table = Table(sensitivity_data, colWidths=[2 * inch, 2 * inch, 2 * inch])
+        sensitivity_table.setStyle(TableStyle([
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+            ('BACKGROUND', (0, 0), (-1, 0), colors.lightblue),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('PADDING', (0, 0), (-1, -1), 6),
+        ]))
+        story.append(sensitivity_table)
+    else:
+        # Standard results table for non-sensitivity analysis
+        results_data = [[k, str(v)] for k, v in report_data.results.items()]
+        results_table = Table(results_data, colWidths=[2 * inch, 4 * inch])
+        results_table.setStyle(TableStyle([
+            ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+            ('FONTNAME', (1, 0), (1, -1), 'Helvetica'),
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+            ('BACKGROUND', (0, 0), (0, -1), colors.lightblue),
+            ('PADDING', (0, 0), (-1, -1), 6),
+        ]))
+        story.append(results_table)
+
     story.append(Spacer(1, 0.3 * inch))
 
     # Validation section
