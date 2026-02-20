@@ -206,6 +206,13 @@ def main() -> None:
         st.header("ℹ️ Information")
 
         # Validation section
+        st.markdown("""
+        ## Validation
+
+        The (re)validation can take quite a long time – 15 minutes or more, depending on the device!
+        """)
+
+
         st.markdown("### Validation Status")
         validation_ui.render_validation_metrics_dashboard(validation_status)
 
