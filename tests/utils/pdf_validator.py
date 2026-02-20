@@ -58,18 +58,18 @@ def parse_attribute_results(pdf_text: str) -> dict[str, Any]:
     if sample_size_match:
         results["sample_size"] = int(sample_size_match.group(1))
     
-    # Extract confidence level
-    confidence_match = re.search(r"Confidence Level[:\s]+([\d.]+)\s*%", pdf_text, re.IGNORECASE)
+    # Extract confidence level - look for pattern without colon (table format)
+    confidence_match = re.search(r"Confidence Level \(%\)[:\s]+([\d.]+)", pdf_text, re.IGNORECASE)
     if confidence_match:
         results["confidence"] = float(confidence_match.group(1))
     
-    # Extract reliability level
-    reliability_match = re.search(r"Reliability[:\s]+([\d.]+)\s*%", pdf_text, re.IGNORECASE)
+    # Extract reliability level - look for pattern without colon (table format)
+    reliability_match = re.search(r"Reliability \(%\)[:\s]+([\d.]+)", pdf_text, re.IGNORECASE)
     if reliability_match:
         results["reliability"] = float(reliability_match.group(1))
     
-    # Extract allowable failures
-    failures_match = re.search(r"Allowable Failures[:\s]+(\d+)", pdf_text, re.IGNORECASE)
+    # Extract allowable failures - look for both patterns
+    failures_match = re.search(r"Allowable Failures(?: \(c\))?[:\s]+(\d+)", pdf_text, re.IGNORECASE)
     if failures_match:
         results["failures"] = int(failures_match.group(1))
     
@@ -98,13 +98,13 @@ def parse_variables_results(pdf_text: str) -> dict[str, Any]:
     """
     results = {}
     
-    # Extract sample size
-    sample_size_match = re.search(r"Sample Size[:\s]+(\d+)", pdf_text, re.IGNORECASE)
+    # Extract sample size - look for pattern with (n) or without
+    sample_size_match = re.search(r"Sample Size(?: \(n\))?[:\s]+(\d+)", pdf_text, re.IGNORECASE)
     if sample_size_match:
         results["sample_size"] = int(sample_size_match.group(1))
     
-    # Extract tolerance factor
-    tolerance_factor_match = re.search(r"Tolerance Factor[:\s\(k\)]+[:\s]+([\d.]+)", pdf_text, re.IGNORECASE)
+    # Extract tolerance factor - look for pattern with (k) in the label
+    tolerance_factor_match = re.search(r"Tolerance Factor \(k\)[:\s]+([\d.]+)", pdf_text, re.IGNORECASE)
     if tolerance_factor_match:
         results["tolerance_factor"] = float(tolerance_factor_match.group(1))
     
@@ -182,8 +182,8 @@ def parse_reliability_results(pdf_text: str) -> dict[str, Any]:
     """
     results = {}
     
-    # Extract test duration
-    duration_match = re.search(r"Test Duration[:\s]+([\d.]+)\s*(?:hours?|hrs?)", pdf_text, re.IGNORECASE)
+    # Extract test duration - look for pattern without "hours" suffix
+    duration_match = re.search(r"Test Duration[:\s]+([\d.]+)", pdf_text, re.IGNORECASE)
     if duration_match:
         results["test_duration"] = float(duration_match.group(1))
     
@@ -192,8 +192,8 @@ def parse_reliability_results(pdf_text: str) -> dict[str, Any]:
     if af_match:
         results["acceleration_factor"] = float(af_match.group(1))
     
-    # Extract confidence level
-    confidence_match = re.search(r"Confidence Level[:\s]+([\d.]+)\s*%", pdf_text, re.IGNORECASE)
+    # Extract confidence level - look for pattern without colon (table format)
+    confidence_match = re.search(r"Confidence Level \(%\)[:\s]+([\d.]+)", pdf_text, re.IGNORECASE)
     if confidence_match:
         results["confidence"] = float(confidence_match.group(1))
     

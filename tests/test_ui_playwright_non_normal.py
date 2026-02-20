@@ -34,8 +34,9 @@ def test_non_normal_tab_renders(page: Page):
     page.locator("button:has-text('Non-Normal Distribution')").first.click()
     
     # Verify tab content is visible
-    expect(page.get_by_text("Non-Normal Distribution Analysis")).to_be_visible(timeout=10000)
-    expect(page.get_by_label("Enter your data")).to_be_visible()
+    expect(page.get_by_role("heading", name="Non-Normal Distribution Analysis")).to_be_visible(timeout=10000)
+    # Check for the data input text area (label varies based on input method)
+    expect(page.locator("textarea").first).to_be_visible()
 
 
 @pytest.mark.pq
@@ -60,7 +61,7 @@ def test_non_normal_outlier_detection(page: Page):
     
     # Enter sample data with outliers
     data_input = page.get_by_label("Enter your data")
-    data_input.clear()
+    data_input.click(click_count=3)
     data_input.fill("1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 100, 200")
     
     # Click detect outliers button
@@ -96,7 +97,7 @@ def test_non_normal_normality_tests(page: Page):
     
     # Enter sample data
     data_input = page.get_by_label("Enter your data")
-    data_input.clear()
+    data_input.click(click_count=3)
     data_input.fill("5.2, 6.1, 5.8, 6.3, 5.9, 6.0, 5.7, 6.2, 5.5, 6.4, 5.6, 6.1, 5.9, 6.0, 5.8")
     
     # Click test normality button
@@ -136,7 +137,7 @@ def test_non_normal_transformation(page: Page):
     
     # Enter sample data (positive values for transformation)
     data_input = page.get_by_label("Enter your data")
-    data_input.clear()
+    data_input.click(click_count=3)
     data_input.fill("1.5, 2.3, 3.1, 4.2, 5.5, 6.8, 7.2, 8.9, 10.1, 12.5, 15.3, 18.7, 22.1, 25.8, 30.2")
     
     # Select transformation method from dropdown
@@ -190,7 +191,7 @@ def test_property_data_input_interaction(page: Page):
     for data_string in test_cases:
         # Fill data input
         data_input = page.get_by_label("Enter your data")
-        data_input.clear()
+        data_input.click(click_count=3)
         data_input.fill(data_string)
         
         # Verify the value was set
@@ -219,7 +220,7 @@ def test_property_dropdown_selection(page: Page):
     
     # Enter some data first (required for transformation)
     data_input = page.get_by_label("Enter your data")
-    data_input.clear()
+    data_input.click(click_count=3)
     data_input.fill("1, 2, 3, 4, 5, 6, 7, 8, 9, 10")
     
     # Test dropdown selection for transformation methods

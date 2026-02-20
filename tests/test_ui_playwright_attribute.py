@@ -35,8 +35,8 @@ def test_attribute_tab_renders(page: Page):
     
     # Verify tab content is visible
     expect(page.get_by_text("Attribute Data Analysis")).to_be_visible(timeout=10000)
-    expect(page.get_by_label("Confidence Level (%)")).to_be_visible()
-    expect(page.get_by_label("Reliability (%)")).to_be_visible()
+    expect(page.get_by_label("Confidence Level (%)").first).to_be_visible()
+    expect(page.get_by_label("Reliability (%)").first).to_be_visible()
 
 
 @pytest.mark.pq
@@ -64,31 +64,31 @@ def test_attribute_zero_failure_calculation(page: Page):
     # Uncheck sensitivity analysis to enter specific c value
     page.get_by_text("Perform sensitivity analysis").click()
     
-    # Fill inputs
-    confidence_input = page.get_by_label("Confidence Level (%)")
-    confidence_input.clear()
+    # Fill inputs - use triple-click to select all, then type
+    confidence_input = page.get_by_role("spinbutton", name="Confidence Level (%)").first
+    confidence_input.click(click_count=3)
     confidence_input.fill("95")
     
-    reliability_input = page.get_by_label("Reliability (%)")
-    reliability_input.clear()
+    reliability_input = page.get_by_role("spinbutton", name="Reliability (%)").first
+    reliability_input.click(click_count=3)
     reliability_input.fill("90")
     
     # Allowable failures should default to 0
-    failures_input = page.get_by_label("Number of allowable failures (c)")
-    failures_input.clear()
+    failures_input = page.get_by_role("spinbutton", name="Number of allowable failures (c)").first
+    failures_input.click(click_count=3)
     failures_input.fill("0")
     
     # Click calculate
     page.get_by_role("button", name="Calculate Sample Size").click()
     
     # Verify results section appears
-    expect(page.get_by_text("Results")).to_be_visible()
+    expect(page.get_by_role("heading", name="Results")).to_be_visible(timeout=10000)
     
     # Verify the sample size is 29
     expect(page.get_by_text("Required Sample Size: 29")).to_be_visible()
     
     # Verify method is Success Run
-    expect(page.get_by_text("Success Run")).to_be_visible()
+    expect(page.get_by_text("Method: Success Run")).to_be_visible()
 
 
 @pytest.mark.pq
@@ -118,20 +118,20 @@ def test_attribute_sensitivity_analysis(page: Page):
     if not sensitivity_checkbox.is_checked():
         sensitivity_checkbox.click()
     
-    # Fill inputs
-    confidence_input = page.get_by_label("Confidence Level (%)")
-    confidence_input.clear()
+    # Fill inputs - use triple-click to select all, then type
+    confidence_input = page.get_by_role("spinbutton", name="Confidence Level (%)").first
+    confidence_input.click(click_count=3)
     confidence_input.fill("95")
     
-    reliability_input = page.get_by_label("Reliability (%)")
-    reliability_input.clear()
+    reliability_input = page.get_by_role("spinbutton", name="Reliability (%)").first
+    reliability_input.click(click_count=3)
     reliability_input.fill("90")
     
     # Click calculate
     page.get_by_role("button", name="Calculate Sample Size").click()
     
     # Verify results section appears
-    expect(page.get_by_text("Results")).to_be_visible()
+    expect(page.get_by_role("heading", name="Results")).to_be_visible(timeout=10000)
     
     # Verify sensitivity analysis table header
     expect(page.get_by_text("Sensitivity Analysis Results")).to_be_visible()
@@ -173,34 +173,35 @@ def test_attribute_with_failures(page: Page):
     # Uncheck sensitivity analysis to enter specific c value
     page.get_by_text("Perform sensitivity analysis").click()
     
-    # Fill inputs
-    confidence_input = page.get_by_label("Confidence Level (%)")
-    confidence_input.clear()
+    # Fill inputs - use triple-click to select all, then type
+    confidence_input = page.get_by_role("spinbutton", name="Confidence Level (%)").first
+    confidence_input.click(click_count=3)
     confidence_input.fill("95")
     
-    reliability_input = page.get_by_label("Reliability (%)")
-    reliability_input.clear()
+    reliability_input = page.get_by_role("spinbutton", name="Reliability (%)").first
+    reliability_input.click(click_count=3)
     reliability_input.fill("90")
     
     # Set allowable failures to 2
-    failures_input = page.get_by_label("Number of allowable failures (c)")
-    failures_input.clear()
+    failures_input = page.get_by_role("spinbutton", name="Number of allowable failures (c)").first
+    failures_input.click(click_count=3)
     failures_input.fill("2")
     
     # Click calculate
     page.get_by_role("button", name="Calculate Sample Size").click()
     
     # Verify results section appears
-    expect(page.get_by_text("Results")).to_be_visible()
+    expect(page.get_by_role("heading", name="Results")).to_be_visible(timeout=10000)
     
     # Verify single result is displayed (not sensitivity analysis table)
     expect(page.get_by_text("Required Sample Size:")).to_be_visible()
     
-    # Verify the allowable failures metric shows 2
-    expect(page.get_by_text("Allowable Failures")).to_be_visible()
+    # Verify the allowable failures value is displayed (format may vary)
+    # Just check that we have a result with the value 2
+    expect(page.locator("text=/Allowable Failures.*2/")).to_be_visible()
     
     # Verify method is Binomial (not Success Run)
-    expect(page.get_by_text("Binomial")).to_be_visible()
+    expect(page.get_by_text("Method: Binomial")).to_be_visible()
     
     # Verify sensitivity analysis table is NOT displayed
     expect(page.get_by_text("Sensitivity Analysis Results")).not_to_be_visible()
@@ -233,27 +234,27 @@ def test_attribute_invalid_confidence(page: Page):
     # the boundary behavior. Let's try entering 99.9 first to ensure it works,
     # then verify that 100+ would be rejected by the input validation
     
-    confidence_input = page.get_by_label("Confidence Level (%)")
-    confidence_input.clear()
+    confidence_input = page.get_by_role("spinbutton", name="Confidence Level (%)").first
+    confidence_input.click(click_count=3)
     confidence_input.fill("99.9")
     
-    reliability_input = page.get_by_label("Reliability (%)")
-    reliability_input.clear()
+    reliability_input = page.get_by_role("spinbutton", name="Reliability (%)").first
+    reliability_input.click(click_count=3)
     reliability_input.fill("90")
     
-    failures_input = page.get_by_label("Number of allowable failures (c)")
-    failures_input.clear()
+    failures_input = page.get_by_role("spinbutton", name="Number of allowable failures (c)").first
+    failures_input.click(click_count=3)
     failures_input.fill("0")
     
     # Click calculate - this should work with 99.9
     page.get_by_role("button", name="Calculate Sample Size").click()
     
     # Verify results appear (no error)
-    expect(page.get_by_text("Results")).to_be_visible()
+    expect(page.get_by_role("heading", name="Results")).to_be_visible(timeout=10000)
     
     # Now test that the input field prevents values > 99.9
     # The number_input with max_value=99.9 should prevent entering higher values
-    confidence_input.clear()
+    confidence_input.click(click_count=3)
     confidence_input.fill("100")
     
     # The input should be clamped to 99.9 or show validation error
@@ -347,16 +348,16 @@ def test_property_numeric_input_interaction(page: Page):
         confidence_input = page.get_by_role("spinbutton", name="Confidence Level (%)").first
         reliability_input = page.get_by_role("spinbutton", name="Reliability (%)").first
         
-        # Fill confidence level
-        confidence_input.clear()
+        # Fill confidence level - use triple-click to select all
+        confidence_input.click(click_count=3)
         confidence_input.fill(f"{confidence:.2f}")
         
         # Verify the value was set
         confidence_value = confidence_input.input_value()
         assert confidence_value is not None and len(confidence_value) > 0
         
-        # Fill reliability level
-        reliability_input.clear()
+        # Fill reliability level - use triple-click to select all
+        reliability_input.click(click_count=3)
         reliability_input.fill(f"{reliability:.2f}")
         
         # Verify the value was set
@@ -398,15 +399,15 @@ def test_property_calculate_button_triggers_computation(page: Page):
     for confidence, reliability in test_cases:
         # Fill inputs with valid values using role selectors
         confidence_input = page.get_by_role("spinbutton", name="Confidence Level (%)").first
-        confidence_input.clear()
+        confidence_input.click(click_count=3)
         confidence_input.fill(f"{confidence:.2f}")
         
         reliability_input = page.get_by_role("spinbutton", name="Reliability (%)").first
-        reliability_input.clear()
+        reliability_input.click(click_count=3)
         reliability_input.fill(f"{reliability:.2f}")
         
         failures_input = page.get_by_role("spinbutton", name="Number of allowable failures (c)").first
-        failures_input.clear()
+        failures_input.click(click_count=3)
         failures_input.fill("0")
         
         # Click calculate button
@@ -454,15 +455,15 @@ def test_property_results_display_after_calculation(page: Page):
     for confidence, reliability, failures in test_cases:
         # Fill inputs with valid values using role selectors
         confidence_input = page.get_by_role("spinbutton", name="Confidence Level (%)").first
-        confidence_input.clear()
+        confidence_input.click(click_count=3)
         confidence_input.fill(f"{confidence:.2f}")
         
         reliability_input = page.get_by_role("spinbutton", name="Reliability (%)").first
-        reliability_input.clear()
+        reliability_input.click(click_count=3)
         reliability_input.fill(f"{reliability:.2f}")
         
         failures_input = page.get_by_role("spinbutton", name="Number of allowable failures (c)").first
-        failures_input.clear()
+        failures_input.click(click_count=3)
         failures_input.fill(str(failures))
         
         # Click calculate button

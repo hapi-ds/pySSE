@@ -49,6 +49,11 @@ The Sample Size Estimator provides four specialized statistical analysis modules
    uv sync
    ```
    
+   **Install test browser**:
+   ```bash
+   uv run playwright install chromium chromium-headless-shell
+   ```
+
    This command:
    - Creates a virtual environment automatically
    - Installs all dependencies with locked versions from `uv.lock`

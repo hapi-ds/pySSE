@@ -33,9 +33,9 @@ def test_reliability_tab_renders(page: Page):
     page.locator("button:has-text('Reliability')").first.click()
     
     # Verify tab content is visible
-    expect(page.get_by_text("Reliability Testing")).to_be_visible(timeout=10000)
-    expect(page.get_by_label("Confidence Level (%)")).to_be_visible()
-    expect(page.get_by_label("Number of Failures")).to_be_visible()
+    expect(page.get_by_role("heading", name="Reliability Life Testing")).to_be_visible(timeout=10000)
+    expect(page.get_by_role("spinbutton", name="Confidence Level (%)").first).to_be_visible()
+    expect(page.get_by_role("spinbutton", name="Number of Failures").first).to_be_visible()
 
 
 @pytest.mark.pq
@@ -64,7 +64,7 @@ def test_reliability_calculation(page: Page):
     page.get_by_label("Confidence Level (%)").clear()
     page.get_by_label("Confidence Level (%)").fill("95")
     
-    page.get_by_label("Number of Failures").clear()
+    page.get_by_label("Number of Failures").first.click(click_count=3)
     page.get_by_label("Number of Failures").fill("0")
     
     # Fill Arrhenius parameters
@@ -81,7 +81,7 @@ def test_reliability_calculation(page: Page):
     page.get_by_role("button", name="Calculate Test Duration").click()
     
     # Verify results section appears
-    expect(page.get_by_text("Results")).to_be_visible(timeout=10000)
+    expect(page.get_by_role("heading", name="Results")).to_be_visible(timeout=10000)
     
     # Verify test duration displays
     expect(page.get_by_text("Test Duration")).to_be_visible()
@@ -114,7 +114,7 @@ def test_reliability_invalid_reliability(page: Page):
     page.get_by_label("Confidence Level (%)").clear()
     page.get_by_label("Confidence Level (%)").fill("99.9")
     
-    page.get_by_label("Number of Failures").clear()
+    page.get_by_label("Number of Failures").first.click(click_count=3)
     page.get_by_label("Number of Failures").fill("0")
     
     page.get_by_label("Activation Energy (eV)").clear()
@@ -130,7 +130,7 @@ def test_reliability_invalid_reliability(page: Page):
     page.get_by_role("button", name="Calculate Test Duration").click()
     
     # Verify results appear (no error)
-    expect(page.get_by_text("Results")).to_be_visible(timeout=10000)
+    expect(page.get_by_role("heading", name="Results")).to_be_visible(timeout=10000)
     
     # Now test that the input field prevents values > 99.9
     # The number_input with max_value=99.9 should prevent entering higher values
@@ -183,7 +183,7 @@ def test_property_error_messages_for_invalid_inputs(page: Page):
     page.get_by_role("button", name="Calculate Sample Size").click()
     
     # Valid input should produce results
-    expect(page.get_by_text("Results")).to_be_visible(timeout=10000)
+    expect(page.get_by_role("heading", name="Results")).to_be_visible(timeout=10000)
     
     # Test 2: Invalid spec limits in Variables tab (LSL >= USL)
     page.locator("button:has-text('Variables (Normal)')").first.click()
@@ -197,10 +197,10 @@ def test_property_error_messages_for_invalid_inputs(page: Page):
     page.get_by_label("Sample Size (n)").clear()
     page.get_by_label("Sample Size (n)").fill("30")
     
-    page.get_by_label("Sample Mean").clear()
+    page.get_by_label("Sample Mean").first.click(click_count=3)
     page.get_by_label("Sample Mean").fill("10.0")
     
-    page.get_by_label("Sample Standard Deviation").clear()
+    page.get_by_label("Sample Standard Deviation").first.click(click_count=3)
     page.get_by_label("Sample Standard Deviation").fill("1.0")
     
     # Invalid spec limits: LSL >= USL
@@ -222,7 +222,7 @@ def test_property_error_messages_for_invalid_inputs(page: Page):
     page.get_by_label("Upper Specification Limit (USL)").clear()
     page.get_by_label("Upper Specification Limit (USL)").fill("13.0")
     
-    page.get_by_label("Sample Standard Deviation").clear()
+    page.get_by_label("Sample Standard Deviation").first.click(click_count=3)
     page.get_by_label("Sample Standard Deviation").fill("-1.0")
     
     page.get_by_role("button", name="Calculate Tolerance Limits").click()

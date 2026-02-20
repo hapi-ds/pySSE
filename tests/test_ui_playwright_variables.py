@@ -34,10 +34,10 @@ def test_variables_tab_renders(page: Page):
     page.locator("button:has-text('Variables (Normal)')").first.click()
     
     # Verify tab content is visible
-    expect(page.get_by_text("Variables Data Analysis")).to_be_visible(timeout=10000)
-    expect(page.get_by_label("Sample Size (n)")).to_be_visible()
-    expect(page.get_by_label("Confidence Level (%)")).to_be_visible()
-    expect(page.get_by_label("Reliability (%)")).to_be_visible()
+    expect(page.get_by_role("heading", name="Variables Data Analysis (Normal Distribution)")).to_be_visible(timeout=10000)
+    expect(page.get_by_role("spinbutton", name="Sample Size (n)").first).to_be_visible()
+    expect(page.get_by_role("spinbutton", name="Confidence Level (%)").first).to_be_visible()
+    expect(page.get_by_role("spinbutton", name="Reliability/Coverage (%)").first).to_be_visible()
 
 
 @pytest.mark.pq
@@ -72,17 +72,17 @@ def test_variables_basic_calculation(page: Page):
     page.get_by_label("Sample Size (n)").clear()
     page.get_by_label("Sample Size (n)").fill("30")
     
-    page.get_by_label("Sample Mean").clear()
+    page.get_by_label("Sample Mean").first.click(click_count=3)
     page.get_by_label("Sample Mean").fill("10.0")
     
-    page.get_by_label("Sample Standard Deviation").clear()
+    page.get_by_label("Sample Standard Deviation").first.click(click_count=3)
     page.get_by_label("Sample Standard Deviation").fill("1.0")
     
     # Click calculate
     page.get_by_role("button", name="Calculate Tolerance Limits").click()
     
     # Verify results section appears
-    expect(page.get_by_text("Results")).to_be_visible(timeout=10000)
+    expect(page.get_by_role("heading", name="Results")).to_be_visible(timeout=10000)
     
     # Verify tolerance factor displays
     expect(page.get_by_text("Tolerance Factor (k)")).to_be_visible()
@@ -127,10 +127,10 @@ def test_variables_with_spec_limits(page: Page):
     page.get_by_label("Sample Size (n)").clear()
     page.get_by_label("Sample Size (n)").fill("30")
     
-    page.get_by_label("Sample Mean").clear()
+    page.get_by_label("Sample Mean").first.click(click_count=3)
     page.get_by_label("Sample Mean").fill("10.0")
     
-    page.get_by_label("Sample Standard Deviation").clear()
+    page.get_by_label("Sample Standard Deviation").first.click(click_count=3)
     page.get_by_label("Sample Standard Deviation").fill("1.0")
     
     # Fill specification limits
@@ -144,7 +144,7 @@ def test_variables_with_spec_limits(page: Page):
     page.get_by_role("button", name="Calculate Tolerance Limits").click()
     
     # Verify results section appears
-    expect(page.get_by_text("Results")).to_be_visible(timeout=10000)
+    expect(page.get_by_role("heading", name="Results")).to_be_visible(timeout=10000)
     
     # Verify Ppk displays
     expect(page.get_by_text("Process Performance Index (Ppk)")).to_be_visible()
@@ -184,10 +184,10 @@ def test_variables_invalid_spec_limits(page: Page):
     page.get_by_label("Sample Size (n)").clear()
     page.get_by_label("Sample Size (n)").fill("30")
     
-    page.get_by_label("Sample Mean").clear()
+    page.get_by_label("Sample Mean").first.click(click_count=3)
     page.get_by_label("Sample Mean").fill("10.0")
     
-    page.get_by_label("Sample Standard Deviation").clear()
+    page.get_by_label("Sample Standard Deviation").first.click(click_count=3)
     page.get_by_label("Sample Standard Deviation").fill("1.0")
     
     # Fill invalid specification limits (LSL >= USL)
@@ -234,12 +234,12 @@ def test_variables_negative_std_dev(page: Page):
     page.get_by_label("Sample Size (n)").clear()
     page.get_by_label("Sample Size (n)").fill("30")
     
-    page.get_by_label("Sample Mean").clear()
+    page.get_by_label("Sample Mean").first.click(click_count=3)
     page.get_by_label("Sample Mean").fill("10.0")
     
     # Try to enter negative standard deviation
     # Note: Streamlit number_input may have min_value validation
-    page.get_by_label("Sample Standard Deviation").clear()
+    page.get_by_label("Sample Standard Deviation").first.click(click_count=3)
     page.get_by_label("Sample Standard Deviation").fill("-1.0")
     
     # Click calculate
