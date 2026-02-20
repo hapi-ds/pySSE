@@ -83,6 +83,41 @@ class ValidationCertificateGenerator:
             spaceBefore=12
         )
 
+    def _wrap_text(self, text: str | None, style: ParagraphStyle | None = None) -> Paragraph:
+        """Wrap text in a Paragraph flowable for automatic text wrapping.
+        
+        Args:
+            text: Text content to wrap (can be None)
+            style: Paragraph style to use (defaults to Normal style)
+        
+        Returns:
+            Paragraph object with wrapped text
+        
+        Validates: Requirements 2.1, 2.2, 2.3
+        """
+        if text is None:
+            text = ""
+        if style is None:
+            style = self.styles['Normal']
+        return Paragraph(str(text), style)
+    def _wrap_text(self, text: str | None, style: ParagraphStyle | None = None) -> Paragraph:
+        """Wrap text in a Paragraph flowable for automatic text wrapping.
+
+        Args:
+            text: Text content to wrap (can be None)
+            style: Paragraph style to use (defaults to Normal style)
+
+        Returns:
+            Paragraph object with wrapped text
+
+        Validates: Requirements 2.1, 2.2, 2.3
+        """
+        if text is None:
+            text = ""
+        if style is None:
+            style = self.styles['Normal']
+        return Paragraph(str(text), style)
+
     def generate_certificate(
         self,
         validation_result: ValidationResult,
@@ -185,9 +220,9 @@ class ValidationCertificateGenerator:
         
         # Certificate information
         cert_data = [
-            ["Validation Date:", validation_result.validation_date.strftime("%Y-%m-%d %H:%M:%S")],
-            ["Validation Hash:", validation_result.validation_hash[:16] + "..."],
-            ["Expiry Date:", "365 days from validation date"],
+            [self._wrap_text("Validation Date:"), self._wrap_text(validation_result.validation_date.strftime("%Y-%m-%d %H:%M:%S"))],
+            [self._wrap_text("Validation Hash:"), self._wrap_text(validation_result.validation_hash[:16] + "...")],
+            [self._wrap_text("Expiry Date:"), self._wrap_text("365 days from validation date")],
         ]
         
         cert_table = Table(cert_data, colWidths=[2.5 * inch, 3.5 * inch])
@@ -223,9 +258,9 @@ class ValidationCertificateGenerator:
         # Operating system information
         elements.append(Paragraph("Operating System", self.section_style))
         os_data = [
-            ["OS Name:", system_info.os_name],
-            ["OS Version:", system_info.os_version],
-            ["Python Version:", system_info.python_version],
+            [self._wrap_text("OS Name:"), self._wrap_text(system_info.os_name)],
+            [self._wrap_text("OS Version:"), self._wrap_text(system_info.os_version)],
+            [self._wrap_text("Python Version:"), self._wrap_text(system_info.python_version)],
         ]
         
         os_table = Table(os_data, colWidths=[2 * inch, 4 * inch])
@@ -244,9 +279,9 @@ class ValidationCertificateGenerator:
         # Dependencies
         elements.append(Paragraph("Key Dependencies", self.section_style))
         
-        dep_data = [["Package", "Version"]]
+        dep_data = [[self._wrap_text("Package"), self._wrap_text("Version")]]
         for package, version in sorted(system_info.dependencies.items()):
-            dep_data.append([package, version])
+            dep_data.append([self._wrap_text(package), self._wrap_text(version)])
         
         dep_table = Table(dep_data, colWidths=[2 * inch, 2 * inch])
         dep_table.setStyle(TableStyle([
@@ -306,7 +341,7 @@ class ValidationCertificateGenerator:
         # IQ checks table
         elements.append(Paragraph("Installation Verification Details", self.section_style))
         
-        iq_data = [["Check Name", "Description", "Status", "Details"]]
+        iq_data = [[self._wrap_text("Check Name"), self._wrap_text("Description"), self._wrap_text("Status"), self._wrap_text("Details")]]
         
         for check in iq_result.checks:
             status_text = "PASS" if check.passed else "FAIL"
@@ -318,10 +353,10 @@ class ValidationCertificateGenerator:
                 details = check.failure_reason
             
             iq_data.append([
-                check.name,
-                check.description,
-                status_text,
-                details
+                self._wrap_text(check.name),
+                self._wrap_text(check.description),
+                self._wrap_text(status_text),
+                self._wrap_text(details)
             ])
         
         iq_table = Table(iq_data, colWidths=[1.5 * inch, 2 * inch, 0.8 * inch, 2 * inch])
@@ -395,17 +430,17 @@ class ValidationCertificateGenerator:
         for area, tests in sorted(grouped_tests.items()):
             elements.append(Paragraph(f"Functional Area: {area}", self.section_style))
             
-            oq_data = [["Test Name", "URS ID", "Status", "Failure Reason"]]
+            oq_data = [[self._wrap_text("Test Name"), self._wrap_text("URS ID"), self._wrap_text("Status"), self._wrap_text("Failure Reason")]]
             
             for test in tests:
                 status_text = "PASS" if test.passed else "FAIL"
                 failure_reason = test.failure_reason or ""
                 
                 oq_data.append([
-                    test.test_name.split("::")[-1],  # Just the test function name
-                    test.urs_id,
-                    status_text,
-                    failure_reason
+                    self._wrap_text(test.test_name.split("::")[-1]),  # Just the test function name
+                    self._wrap_text(test.urs_id),
+                    self._wrap_text(status_text),
+                    self._wrap_text(failure_reason)
                 ])
             
             oq_table = Table(oq_data, colWidths=[2 * inch, 1.2 * inch, 0.8 * inch, 2.3 * inch])
@@ -480,16 +515,16 @@ class ValidationCertificateGenerator:
         for module, tests in sorted(grouped_tests.items()):
             elements.append(Paragraph(f"Analysis Module: {module}", self.section_style))
             
-            pq_data = [["Test Name", "URS ID", "Workflow", "Status"]]
+            pq_data = [[self._wrap_text("Test Name"), self._wrap_text("URS ID"), self._wrap_text("Workflow"), self._wrap_text("Status")]]
             
             for test in tests:
                 status_text = "PASS" if test.passed else "FAIL"
                 
                 pq_data.append([
-                    test.test_name.split("::")[-1],  # Just the test function name
-                    test.urs_id,
-                    test.workflow_description[:50] + "..." if len(test.workflow_description) > 50 else test.workflow_description,
-                    status_text
+                    self._wrap_text(test.test_name.split("::")[-1]),  # Just the test function name
+                    self._wrap_text(test.urs_id),
+                    self._wrap_text(test.workflow_description[:50] + "..." if len(test.workflow_description) > 50 else test.workflow_description),
+                    self._wrap_text(status_text)
                 ])
             
             pq_table = Table(pq_data, colWidths=[1.8 * inch, 1.2 * inch, 2.3 * inch, 0.8 * inch])
@@ -569,14 +604,14 @@ class ValidationCertificateGenerator:
         all_tests.sort(key=lambda x: x["urs_id"])
         
         # Create traceability table
-        trace_data = [["URS ID", "Test Name", "Phase", "Status"]]
+        trace_data = [[self._wrap_text("URS ID"), self._wrap_text("Test Name"), self._wrap_text("Phase"), self._wrap_text("Status")]]
         
         for test in all_tests:
             trace_data.append([
-                test["urs_id"],
-                test["test_name"],
-                test["phase"],
-                test["status"]
+                self._wrap_text(test["urs_id"]),
+                self._wrap_text(test["test_name"]),
+                self._wrap_text(test["phase"]),
+                self._wrap_text(test["status"])
             ])
         
         trace_table = Table(trace_data, colWidths=[1.5 * inch, 2.5 * inch, 0.8 * inch, 0.8 * inch])

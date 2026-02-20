@@ -17,6 +17,22 @@ from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, Tabl
 from .models import CalculationReport
 
 
+def _wrap_text(text: Any, style: ParagraphStyle) -> Paragraph:
+    """
+    Wrap text in a Paragraph flowable for automatic text wrapping in table cells.
+
+    Args:
+        text: Text content to wrap (can be string, None, or any type)
+        style: ParagraphStyle to apply to the Paragraph
+
+    Returns:
+        Paragraph object with the text content
+    """
+    if text is None:
+        return Paragraph("", style)
+    return Paragraph(str(text), style)
+
+
 def generate_calculation_report(
     report_data: CalculationReport,
     output_path: str
@@ -55,9 +71,9 @@ def generate_calculation_report(
     # Metadata section
     story.append(Paragraph("<b>Report Information</b>", styles['Heading2']))
     metadata_data = [
-        ["Date/Time:", report_data.timestamp.strftime("%Y-%m-%d %H:%M:%S")],
-        ["Module:", report_data.module.capitalize()],
-        ["Application Version:", report_data.app_version]
+        ["Date/Time:", _wrap_text(report_data.timestamp.strftime("%Y-%m-%d %H:%M:%S"), styles['Normal'])],
+        ["Module:", _wrap_text(report_data.module.capitalize(), styles['Normal'])],
+        ["Application Version:", _wrap_text(report_data.app_version, styles['Normal'])]
     ]
     metadata_table = Table(metadata_data, colWidths=[2 * inch, 4 * inch])
     metadata_table.setStyle(TableStyle([
@@ -71,7 +87,7 @@ def generate_calculation_report(
 
     # Input parameters section
     story.append(Paragraph("<b>Input Parameters</b>", styles['Heading2']))
-    input_data = [[k, str(v)] for k, v in report_data.inputs.items()]
+    input_data = [[_wrap_text(k, styles['Normal']), _wrap_text(str(v), styles['Normal'])] for k, v in report_data.inputs.items()]
     input_table = Table(input_data, colWidths=[2 * inch, 4 * inch])
     input_table.setStyle(TableStyle([
         ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
@@ -99,9 +115,9 @@ def generate_calculation_report(
         sensitivity_data = [["Allowable Failures (c)", "Required Sample Size (n)", "Method"]]
         for result in report_data.results["sensitivity_analysis"]:
             sensitivity_data.append([
-                str(result["allowable_failures"]),
-                str(result["sample_size"]),
-                result["method"].replace("_", " ").title()
+                _wrap_text(str(result["allowable_failures"]), styles['Normal']),
+                _wrap_text(str(result["sample_size"]), styles['Normal']),
+                _wrap_text(result["method"].replace("_", " ").title(), styles['Normal'])
             ])
 
         sensitivity_table = Table(sensitivity_data, colWidths=[2 * inch, 2 * inch, 2 * inch])
@@ -117,7 +133,7 @@ def generate_calculation_report(
         story.append(sensitivity_table)
     else:
         # Standard results table for non-sensitivity analysis
-        results_data = [[k, str(v)] for k, v in report_data.results.items()]
+        results_data = [[_wrap_text(k, styles['Normal']), _wrap_text(str(v), styles['Normal'])] for k, v in report_data.results.items()]
         results_table = Table(results_data, colWidths=[2 * inch, 4 * inch])
         results_table.setStyle(TableStyle([
             ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
@@ -136,8 +152,8 @@ def generate_calculation_report(
     validation_color = colors.green if report_data.validated_state else colors.red
     validation_status = "VALIDATED" if report_data.validated_state else "NOT VALIDATED"
     validation_data = [
-        ["Engine Hash:", report_data.engine_hash],
-        ["Validation Status:", validation_status]
+        ["Engine Hash:", _wrap_text(report_data.engine_hash, styles['Normal'])],
+        ["Validation Status:", _wrap_text(validation_status, styles['Normal'])]
     ]
     validation_table = Table(validation_data, colWidths=[2 * inch, 4 * inch])
     validation_table.setStyle(TableStyle([
@@ -228,10 +244,10 @@ def generate_validation_certificate(
         styles['Heading2']
     ))
     exec_data = [
-        ["Test Date:", test_results["test_date"].strftime("%Y-%m-%d %H:%M:%S")],
-        ["Tester:", test_results["tester"]],
-        ["Operating System:", test_results["system_info"]["os"]],
-        ["Python Version:", test_results["system_info"]["python_version"]]
+        ["Test Date:", _wrap_text(test_results["test_date"].strftime("%Y-%m-%d %H:%M:%S"), styles['Normal'])],
+        ["Tester:", _wrap_text(test_results["tester"], styles['Normal'])],
+        ["Operating System:", _wrap_text(test_results["system_info"]["os"], styles['Normal'])],
+        ["Python Version:", _wrap_text(test_results["system_info"]["python_version"], styles['Normal'])]
     ]
     exec_table = Table(exec_data, colWidths=[2 * inch, 4 * inch])
     exec_table.setStyle(TableStyle([
@@ -250,9 +266,9 @@ def generate_validation_certificate(
     urs_data = [["URS ID", "Test Name", "Status"]]
     for result in test_results["urs_results"]:
         urs_data.append([
-            result["urs_id"],
-            result["test_name"],
-            result["status"]
+            _wrap_text(result["urs_id"], styles['Normal']),
+            _wrap_text(result["test_name"], styles['Normal']),
+            _wrap_text(result["status"], styles['Normal'])
         ])
 
     urs_table = Table(urs_data, colWidths=[1.5 * inch, 3 * inch, 1 * inch])
@@ -282,8 +298,8 @@ def generate_validation_certificate(
     overall_status = "PASSED" if test_results["all_passed"] else "FAILED"
     status_color = colors.green if test_results["all_passed"] else colors.red
     summary_data = [
-        ["Overall Status:", overall_status],
-        ["Validated Hash:", test_results["validated_hash"]]
+        ["Overall Status:", _wrap_text(overall_status, styles['Normal'])],
+        ["Validated Hash:", _wrap_text(test_results["validated_hash"], styles['Normal'])]
     ]
     summary_table = Table(summary_data, colWidths=[2 * inch, 4 * inch])
     summary_table.setStyle(TableStyle([
