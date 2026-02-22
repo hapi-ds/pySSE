@@ -2,6 +2,15 @@
 
 A Python-based web application for determining statistically valid sample sizes for medical device design verification and process validation. Built with Streamlit and designed for Quality Management Systems (QMS) compliance per ISO/TR 80002-2.
 
+## Background
+
+A simple test to check the limits of Agentic Coding for me.
+Result: ‘It's not that easy after all.’ The suggested automated E2E tests are far from sufficient – and even after many iterations, this does not change. And each iteration complicates the system. Nothing works here without very precise guidance. Even a simple ‘unaccompanied’ implementation did not lead to the result I would have expected.
+
+Nevertheless, the system is already very (very) good. I am therefore trying to implement a more strictly guided approach with manual interventions to get a usable and self-validating sample size calculator.
+
+**I'll leave this code here for anyone who's interested, but it's best not to use it ;) .**
+
 ## Overview
 
 The Sample Size Estimator provides four specialized statistical analysis modules:
